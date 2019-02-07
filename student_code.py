@@ -142,8 +142,53 @@ class KnowledgeBase(object):
         """
         ####################################################
         # Student code goes here
-
-
+        return self.explain_helper(fact_or_rule, 0)
+        
+    def explain_helper(self, fact_or_rule, numspaces):
+        outputstring = ""
+        if isinstance(fact_or_rule, Fact):
+            if not fact_or_rule in self.facts:
+                outputstring = "Fact is not in the KB"
+            else:
+                ind = self.facts.index(fact_or_rule)
+                fact = self.facts[ind]
+                supportedby = fact.supported_by
+                outputstring = numspaces*" " + "fact: " + str(fact.statement) 
+                if fact.asserted:
+                    outputstring += " ASSERTED \n"
+                elif supportedby:
+                    numspaces += 2
+                    outputstring += "\n"
+                    for pair in supportedby:
+                        outputstring += numspaces*" " + "SUPPORTED BY \n" 
+                        outputstring += self.explain_helper(pair[0], numspaces + 2) + self.explain_helper(pair[1], numspaces + 2)
+        elif isinstance(fact_or_rule, Rule):
+            if not fact_or_rule in self.rules:
+                outputstring = "Rule is not in the KB"
+            else:
+                ind = self.rules.index(fact_or_rule)
+                rule = self.rules[ind]
+                supportedby = rule.supported_by
+                outputstring = numspaces*" " +"rule: " + self.rule_to_string(rule)
+                if rule.asserted:
+                    outputstring += " ASSERTED \n"
+                elif supportedby:
+                    numspaces += 2
+                    outputstring += "\n" 
+                    for pair in supportedby:
+                        outputstring += numspaces*" " + "SUPPORTED BY \n" 
+                        outputstring += self.explain_helper(pair[0], numspaces + 2) + self.explain_helper(pair[1], numspaces + 2)
+        return outputstring
+    def rule_to_string(self, rule):
+        returnstring = "("
+        for index, state in enumerate(rule.lhs):
+            if index == len(rule.lhs) -1:
+                returnstring += str(state) + ") "
+            else:
+                returnstring += str(state) + ", "
+        returnstring += "-> " + str(rule.rhs)
+        return returnstring
+    
 class InferenceEngine(object):
     def fc_infer(self, fact, rule, kb):
         """Forward-chaining to infer new facts and rules
