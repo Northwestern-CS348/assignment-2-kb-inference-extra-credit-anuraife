@@ -160,7 +160,7 @@ class KnowledgeBase(object):
                     numspaces += 2
                     outputstring += "\n"
                     for pair in supportedby:
-                        outputstring += numspaces*" " + "SUPPORTED BY \n" 
+                        outputstring += numspaces*" " + "SUPPORTED BY  \n" 
                         outputstring += self.explain_helper(pair[0], numspaces + 2) + self.explain_helper(pair[1], numspaces + 2)
         elif isinstance(fact_or_rule, Rule):
             if not fact_or_rule in self.rules:
@@ -176,7 +176,7 @@ class KnowledgeBase(object):
                     numspaces += 2
                     outputstring += "\n" 
                     for pair in supportedby:
-                        outputstring += numspaces*" " + "SUPPORTED BY \n" 
+                        outputstring += numspaces*" " + "SUPPORTED BY  \n" 
                         outputstring += self.explain_helper(pair[0], numspaces + 2) + self.explain_helper(pair[1], numspaces + 2)
         return outputstring
     def rule_to_string(self, rule):
